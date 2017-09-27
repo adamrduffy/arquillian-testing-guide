@@ -1,8 +1,5 @@
 package com.tad.arqdevguide.chp3.cdi;
 
-import java.io.File;
-import java.util.Collection;
-
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import static org.junit.Assert.*;
@@ -13,11 +10,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.EffectivePomMavenDependencyResolver;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependency;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenResolutionFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.tad.arqdevguide</groupId>
 	<artifactId>arquillian-developers-guide-chapter3</artifactId>
@@ -15,6 +15,7 @@
 		<version.myfaces>2.0.3</version.myfaces>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	<!--
 	<repositories>
 		<repository>
 			<id>jboss-public-repository</id>
@@ -32,6 +33,7 @@
 			<url>http://repo2.maven.org/maven2</url>
 		</repository>
 	</repositories>
+	-->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -286,41 +288,6 @@
 			</build>
 		</profile>
 		<profile>
-			<id>tomee-remote-1.5</id>
-			<properties>
-				<tomee.version>1.5.0</tomee.version>
-				<tomee.classifier>plus</tomee.classifier>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<includes>
-								<include>**/junit/**</include>
-								<include>**/cdi/**</include>
-								<include>**/servlet/**</include>
-							</includes>
-							<systemPropertyVariables>
-								<tomee.httpPort>8080</tomee.httpPort>
-								<tomee.stopPort>0</tomee.stopPort>
-								<tomee.classifier>${tomee.classifier}</tomee.classifier>
-								<tomee.version>${tomee.version}</tomee.version>
-							</systemPropertyVariables>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-			<dependencies>
-				<dependency>
-					<groupId>org.apache.openejb</groupId>
-					<artifactId>arquillian-tomee-remote</artifactId>
-					<version>${tomee.version}</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
 			<id>tomee-embedded-1.5</id>
 			<dependencies>
 				<dependency>
@@ -356,7 +323,7 @@
 				<dependency>
 					<groupId>org.jboss.arquillian.container</groupId>
 					<artifactId>arquillian-openejb-embedded-3.1</artifactId>
-					<version>1.0.0.CR2-SNAPSHOT</version>
+					<version>1.0.0.Alpha5</version>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.openejb</groupId>
@@ -365,8 +332,8 @@
 				</dependency>
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
-					<artifactId>geronimo-cdi_1.0_spec</artifactId>
-					<version>1.0-SNAPSHOT</version>
+					<artifactId>geronimo-jcdi_1.0_spec</artifactId>
+					<version>1.0</version>
 				</dependency>
 			</dependencies>
 			<build>
@@ -476,11 +443,6 @@
 				</dependency>
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
-					<artifactId>geronimo-servlet_3.0_spec</artifactId>
-					<version>1.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-ejb_3.1_spec</artifactId>
 					<version>1.0.2</version>
 				</dependency>
@@ -577,62 +539,6 @@
 			</build>
 		</profile>
 		<profile>
-			<id>jbossas-embedded-6</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-jbossas-embedded-6</artifactId>
-					<version>1.0.0-SNAPSHOT</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.jbossas</groupId>
-					<artifactId>jboss-as-depchain</artifactId>
-					<version>6.0.0.Final</version>
-					<type>pom</type>
-				</dependency>
-			</dependencies>
-			<dependencyManagement>
-				<dependencies>
-					<dependency>
-						<groupId>org.jboss.jbossas</groupId>
-						<artifactId>jboss-as-depchain</artifactId>
-						<version>6.0.0.Final</version>
-						<type>pom</type>
-						<scope>import</scope>
-					</dependency>
-				</dependencies>
-			</dependencyManagement>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<additionalClasspathElements>
-								<additionalClasspathElement>${env.JBOSS6_HOME}/client/jbossws-native-client.jar</additionalClasspathElement>
-								<!-- jbossweb.sar contains shared web.xml, which must be                             visible 
-									from same CL as TomcatDeployer.class.getClassLoader In addition, use the 
-									one from your specific profile.       -->
-								                   
-								<additionalClasspathElement>${env.JBOSS6_HOME}/server/${env.JBOSS6_PROFILE}/deploy/jbossweb.sar</additionalClasspathElement>
-							</additionalClasspathElements>
-							<redirectTestOutputToFile>true</redirectTestOutputToFile>
-							<trimStackTrace>false</trimStackTrace>
-							<printSummary>true</printSummary>
-							<forkMode>once</forkMode>
-							<!-- This is essentially the same JVM setup as you would see in the 
-								default managed JVM. Tweak as your testing sees fit.                      -->
-							<argLine>-Xmx512m -XX:MaxPermSize=256m
-								-Djava.net.preferIPv4Stack=true
-								-Djava.util.logging.manager=org.jboss.logmanager.LogManager
-								-Djava.endorsed.dirs=${env.JBOSS_HOME}/lib/endorsed
-								-Djboss.home=${env.JBOSS_HOME}
-								-Djboss.boot.server.log.dir=${env.JBOSS_HOME}</argLine>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
 			<id>tomcat-6-embedded</id>
 			<dependencies>
 				<dependency>
@@ -689,11 +595,6 @@
 				</dependency>
 				<dependency>
 					<groupId>org.apache.geronimo.specs</groupId>
-					<artifactId>geronimo-servlet_3.0_spec</artifactId>
-					<version>1.0</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.geronimo.specs</groupId>
 					<artifactId>geronimo-ejb_3.1_spec</artifactId>
 					<version>1.0.2</version>
 				</dependency>
@@ -707,197 +608,6 @@
 							<includes>
 								<include>**/junit/**</include>
 								<include>**/ejb/**</include>
-								<include>**/servlet/**</include>
-							</includes>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<!-- managed profiles -->
-		<profile>
-			<id>jbossas-managed-7</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.spec</groupId>
-					<artifactId>jboss-javaee-6.0</artifactId>
-					<version>1.0.0.Final</version>
-					<type>pom</type>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.as</groupId>
-					<artifactId>jboss-as-arquillian-container-managed</artifactId>
-					<version>7.1.1.Final</version>
-					<scope>test</scope>
-				</dependency>
-				<!-- this is only useful if you are using servlet protocol. -->
-				<dependency>
-					<groupId>org.jboss.arquillian.protocol</groupId>
-					<artifactId>arquillian-protocol-servlet</artifactId>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>jbossas-managed-5.1</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-jbossas-managed-5.1</artifactId>
-					<version>1.0.0-SNAPSHOT</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.jbossas</groupId>
-					<artifactId>jboss-server-manager</artifactId>
-					<version>1.0.3.GA</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.jbossas</groupId>
-					<artifactId>jboss-as-client</artifactId>
-					<version>5.1.0.GA</version>
-					<type>pom</type>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>jbossas-managed-6</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-jbossas-managed-6</artifactId>
-					<version>1.0.0-SNAPSHOT</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.jbossas</groupId>
-					<artifactId>jboss-server-manager</artifactId>
-					<version>1.0.3.GA</version>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.jbossas</groupId>
-					<artifactId>jboss-as-client</artifactId>
-					<version>6.0.0.Final</version>
-					<type>pom</type>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>tomcat-managed-7</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-tomcat-managed-7</artifactId>
-					<version>1.0.0.Final-SNAPSHOT</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<includes>
-								<include>**/junit/**</include>
-								<include>**/servlet/**</include>
-							</includes>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>tomcat-managed-6</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-tomcat-managed-6</artifactId>
-					<version>1.0.0.Final-SNAPSHOT</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<includes>
-								<include>**/junit/**</include>
-								<!-- skipped servlet here, since it uses Servlet 3.0 -->
-							</includes>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>tomcat-managed-5.5</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-tomcat-managed-5.5</artifactId>
-					<version>1.0.0.Final-SNAPSHOT</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<includes>
-								<include>**/junit/**</include>
-								<!-- skipped servlet here, since it uses Servlet 3.0 -->
-							</includes>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>glassfish-managed-3.1</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-glassfish-managed-3.1</artifactId>
-					<version>1.0.0.CR3</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>javax</groupId>
-					<artifactId>javaee-api</artifactId>
-					<version>6.0</version>
-					<scope>provided</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>tomcat-remote</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-tomcat-remote-6</artifactId>
-					<version>1.0.0.CR4</version>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.spec</groupId>
-					<artifactId>jboss-javaee-6.0</artifactId>
-					<version>1.0.0.Final</version>
-					<type>pom</type>
-					<scope>provided</scope>
-				</dependency>
-			</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<includes>
-								<include>**/junit/**</include>
 								<include>**/servlet/**</include>
 							</includes>
 						</configuration>

@@ -1,7 +1,6 @@
 package com.tad.arqdevguide.chp3.delegate;
 
 import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import static org.junit.Assert.*;
 
