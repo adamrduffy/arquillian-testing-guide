@@ -7,8 +7,9 @@ import javax.ejb.Stateless;
 @Stateless
 @LocalBean
 public class HelloLocalBean {
-	private HelloLocalBean() { }
 	private final String text = "Hello, World!";
+
+	public HelloLocalBean() { }
 
 	public String getText() {
 		return text;
